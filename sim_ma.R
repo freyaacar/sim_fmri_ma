@@ -5,10 +5,12 @@
   # with FSL
 ################################################################################
   # Preamble
+    library(oro.nifti)
+    library(lattice)
+
     nstud <- 21
     n.form <- formatC(c(1:nstud), width=2, flag="0")
     DIM <- c(91,109,91)
-    library(oro.nifti)
 
     df.stud <- array(data=NA,dim=nstud)
     for (n in 1:nstud) {
@@ -35,7 +37,8 @@
     }
 	
   # Construct a mask for every study
-    masks <- ifelse(tmaps == 0, 1, 0)
+    masks <- ifelse(tmaps == 0, 0, 1)
+    mask <- ifelse(apply(masks,c(2,3,4),sum) > 0, 1, 0)
 
 
 ################################################################################
