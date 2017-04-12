@@ -1,6 +1,6 @@
 ################################################################################
 # Read in dataset
-  # A pain meta-analysis from NeuroVault is used (http://neurovault.org/collections/1425/)
+  # A meta-analysis on pain from NeuroVault is used (http://neurovault.org/collections/1425/)
   # This consists of 21 studies, the first 10 are analysed with SPM, the last 11
   # with FSL
 ################################################################################
@@ -14,6 +14,7 @@
     for (n in 1:nstud) {
     	df.stud[n] <- dim(read.table(paste("21painstudies(NIDM-Results)/pain_",n.form[n],".nidm/DesignMatrix.csv",sep="")))[1] - 1
     }
+    n.perstud <- df.stud + 1
 
   # read in t-maps
     tmaps <- array(data=NA,dim=c(nstud,DIM))
@@ -30,17 +31,44 @@
     J <- 1-(3/((4*(df.stud))-1))
     ESmaps <- array(data=NA,dim=c(nstud,DIM))
     for (n in 1:nstud) {
-    	ESmaps[n,,,] <- tmaps[n,,,]/sqrt(df.stud[n]+1)*J[n]
+    	ESmaps[n,,,] <- tmaps[n,,,]/sqrt(n.perstud[n])*J[n]
     }
 	
+  # Construct a mask for every study
+    masks <- ifelse(tmaps == 0, 1, 0)
+
 
 ################################################################################
 # Compute within- and between study variance
 ################################################################################
   # within-study variance
+    varHedge <- function(g,N){
+	  value <- (1/N) + (1 - (gamma((N - 2) / 2) / gamma((N - 1) / 2))^2 * (N - 3) / 2) * g^2
+	    return(round(value,7))
+	}
+
+	wsvar <- array(data=NA,dim=c(nstud,DIM))
+	for (n in 1:nstud) {
+		wsvar <- varHedge(ESmaps[n,,,],n.perstud[n])
+	}
 
   # between-study variance
+	tau <- function(Y,W,k){
+	  C <- sum(W)-(sum(W^2)/sum(W))
+	  df <- k-1
+	  Q <- sum(W*Y^2)-sum(W*Y)^2/sum(W)
+	  if(Q < df){
+	    T2 <- 0
+	  }else{
+	    T2 <- (Q-df)/C
+	  }
+	  return (T2)
+	}
 
+	bsvar <- array(data=NA,dim=c(nstud,DIM))
+	for (n in 1:nstud) {
+		tau()
+	}
 
 ################################################################################
 # Determine parameters for the simulations
@@ -50,6 +78,7 @@
   # between-study variance
 
   # number of peaks
+
 
   # number of clusters
 
