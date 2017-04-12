@@ -16,3 +16,4 @@ We use a meta-analysis on pain which can be downloaded from neurovault (http://n
 * Export different formats (t-maps, ES maps, SPM output, FSL output, peak coordinates)
 * Compare these parameters to the parameters of a meta-analysis constructed from HCP dataset
 * Compute between-study variance of HCP dataset
+* Add more real meta-analyses/studies
