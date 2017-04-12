@@ -11,3 +11,5 @@ To be able to test meta-analytical tools and methods it is important to have a m
 * Calculate within- and between study variance  
 * Determine other parameters (number of peaks, clusters, peak heights, cluster sizes, sample size, ...)  
 * Find new datasets (+ extract as many parameters as possible)
+* Compare these parameters to the parameters of a meta-analysis constructed from HCP dataset
+* Compute between-study variance of HCP dataset
