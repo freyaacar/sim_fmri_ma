@@ -8,19 +8,19 @@
     library(oro.nifti)
     library(lattice)
 
-    nstud <- 21
-    n.form <- formatC(c(1:nstud), width=2, flag="0")
+    kstud <- 21
+    n.form <- formatC(c(1:kstud), width=2, flag="0")
     DIM <- c(91,109,91)
 
-    df.stud <- array(data=NA,dim=nstud)
-    for (n in 1:nstud) {
+    df.stud <- array(data=NA,dim=kstud)
+    for (n in 1:kstud) {
     	df.stud[n] <- dim(read.table(paste("21painstudies(NIDM-Results)/pain_",n.form[n],".nidm/DesignMatrix.csv",sep="")))[1] - 1
     }
     n.perstud <- df.stud + 1
 
   # read in t-maps
-    tmaps <- array(data=NA,dim=c(nstud,DIM))
-    for (n in 1:nstud) {
+    tmaps <- array(data=NA,dim=c(kstud,DIM))
+    for (n in 1:kstud) {
     	if (n < 11){
     		tmaps[n,,,]<-readNIfTI(paste("21painstudies(NIDM-Results)/pain_",n.form[n],".nidm/TStatistic.nii.gz",sep=""), verbose = FALSE, warn = -1, reorient = TRUE, call = NULL)
     	}
@@ -31,8 +31,8 @@
 
   # ES-maps
     J <- 1-(3/((4*(df.stud))-1))
-    ESmaps <- array(data=NA,dim=c(nstud,DIM))
-    for (n in 1:nstud) {
+    ESmaps <- array(data=NA,dim=c(kstud,DIM))
+    for (n in 1:kstud) {
     	ESmaps[n,,,] <- tmaps[n,,,]/sqrt(n.perstud[n])*J[n]
     }
 	
@@ -47,7 +47,7 @@
   # within-study variance
     varHedge <- function(g,N){
 	  value <- (1/N) + (1 - (gamma((N - 2) / 2) / gamma((N - 1) / 2))^2 * (N - 3) / 2) * g^2
-	    return(round(value,7))
+	    return(value)
 	}
 
 	wsvar <- array(data=NA,dim=c(nstud,DIM))
@@ -68,17 +68,33 @@
 	  return (T2)
 	}
 
-	bsvar <- array(data=NA,dim=c(nstud,DIM))
-	for (n in 1:nstud) {
-		bsvar[n,,,]<-tau(ESmaps[n,,,],(1/wsvar[n,,,]),n.perstud[n])
+	bsvar <- array(data=NA,dim=DIM)
+	for (x in 1:DIM[1]) {
+		for (y in 1:DIM[2]) {
+			for (z in 1:DIM[3]) {
+				bsvar[x,y,z] <- tau(ESmaps[,x,y,z],1/wsvar[,x,y,z],kstud)
+			}
+		}
 	}
+
+  # check values
+	summary(bsvar[which(mask==1,arr.ind=TRUE)[1],which(mask==1,arr.ind=TRUE)[2],which(mask==1,arr.ind=TRUE)[3]])
+	summary(wsvar[1,which(mask==1,arr.ind=TRUE)[1],which(mask==1,arr.ind=TRUE)[2],which(mask==1,arr.ind=TRUE)[3]])
+	bsvar[50,50,51]
+	bsvar[50,50,50]
+	wsvar[1,50,50,51]
+	wsvar[1,50,50,50]
 
 ################################################################################
 # Determine parameters for the simulations
 ################################################################################
   # within-study variance
+	for (n in 1:kstud) {
+		av.wsvar[n] <- median(wsvar[n,which(mask==1,arr.ind=TRUE)])
+	}
 
   # between-study variance
+	av.bsvar <- median(bsvar[which(mask==1,arr.ind=TRUE)])
 
   # number of peaks
 
