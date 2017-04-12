@@ -10,6 +10,11 @@
     DIM <- c(91,109,91)
     library(oro.nifti)
 
+    df.stud <- array(data=NA,dim=nstud)
+    for (n in 1:nstud) {
+    	df.stud[n] <- dim(read.table(paste("21painstudies(NIDM-Results)/pain_",n.form[n],".nidm/DesignMatrix.csv",sep="")))[1] - 1
+    }
+
   # read in t-maps
     tmaps <- array(data=NA,dim=c(nstud,DIM))
     for (n in 1:nstud) {
@@ -21,12 +26,13 @@
     	}
     }
 
-
-  # tmaps
-
-  # z-maps
-
   # ES-maps
+    J <- 1-(3/((4*(df.stud))-1))
+    ESmaps <- array(data=NA,dim=c(nstud,DIM))
+    for (n in 1:nstud) {
+    	ESmaps[n,,,] <- tmaps[n,,,]/sqrt(df.stud[n]+1)*J[n]
+    }
+	
 
 ################################################################################
 # Compute within- and between study variance
