@@ -52,7 +52,7 @@
 
 	wsvar <- array(data=NA,dim=c(nstud,DIM))
 	for (n in 1:nstud) {
-		wsvar <- varHedge(ESmaps[n,,,],n.perstud[n])
+		wsvar[n,,,] <- varHedge(ESmaps[n,,,],n.perstud[n])
 	}
 
   # between-study variance
@@ -70,7 +70,7 @@
 
 	bsvar <- array(data=NA,dim=c(nstud,DIM))
 	for (n in 1:nstud) {
-		tau()
+		bsvar[n,,,]<-tau(ESmaps[n,,,],(1/wsvar[n,,,]),nstud[n])
 	}
 
 ################################################################################
