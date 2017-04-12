@@ -70,7 +70,7 @@
 
 	bsvar <- array(data=NA,dim=c(nstud,DIM))
 	for (n in 1:nstud) {
-		bsvar[n,,,]<-tau(ESmaps[n,,,],(1/wsvar[n,,,]),nstud[n])
+		bsvar[n,,,]<-tau(ESmaps[n,,,],(1/wsvar[n,,,]),n.perstud[n])
 	}
 
 ################################################################################
