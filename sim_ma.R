@@ -38,7 +38,7 @@
 	
   # Construct a mask for every study
     masks <- ifelse(tmaps == 0, 0, 1)
-    mask <- ifelse(apply(masks,c(2,3,4),sum) > 0, 1, 0)
+    mask <- ifelse(apply(masks,c(2,3,4),mean) == 1, 1, 0)
 
 
 ################################################################################
