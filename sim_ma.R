@@ -78,12 +78,21 @@
 	}
 
   # check values
-	summary(bsvar[which(mask==1,arr.ind=TRUE)])
-	summary(wsvar[1,,,][c(which(mask==1,arr.ind=TRUE))])
+	summary(bsvar[mask==1])
+	summary(wsvar[1,,,][mask==1])
 	bsvar[50,50,51]
 	bsvar[50,50,50]
 	wsvar[1,50,50,51]
 	wsvar[1,50,50,50]
+
+  # check per voxel
+	wdb <- apply(wsvar,c(2,3,4),mean)/bsvar
+	summary(wdb[mask==1])
+	levelplot(wdb[,,30])
+
+################################################################################
+# Fixend and random effects meta-analysis
+################################################################################
 
 ################################################################################
 # Determine parameters for the simulations
