@@ -86,9 +86,9 @@ fslpath <- '/usr/local/fsl/bin/'
 	    return(value)
 	}
 
-	wsvar <- array(data=NA,dim=c(nstud,DIM))
-	for (n in 1:nstud) {
-		wsvar[n,,,] <- varHedge(ESmaps[n,,,],n.perstud[n])
+	wsvar.hcp <- array(data=NA,dim=c(k.hcp,DIM))
+	for (k in 1:k.hcp) {
+		wsvar.hcp[k,,,] <- varHedge(ESmaps.hcp[k,,,],n.perst.hcp[k])
 	}
 
   # between-study variance
@@ -104,18 +104,18 @@ fslpath <- '/usr/local/fsl/bin/'
 	  return (T2)
 	}
 
-	bsvar <- array(data=NA,dim=DIM)
+	bsvar.hcp <- array(data=NA,dim=DIM)
 	for (x in 1:DIM[1]) {
 		for (y in 1:DIM[2]) {
 			for (z in 1:DIM[3]) {
-				bsvar[x,y,z] <- tau(ESmaps[,x,y,z],1/wsvar[,x,y,z],kstud)
+				bsvar.hcp[x,y,z] <- tau(ESmaps.hcp[,x,y,z],1/wsvar.hcp[,x,y,z],k.hcp)
 			}
 		}
 	}
 
   # check values
-	summary(bsvar[which(mask==1,arr.ind=TRUE)])
-	summary(wsvar[1,,,][c(which(mask==1,arr.ind=TRUE))])
+	summary(bsvar.hcp[mask.hcp==1])
+	summary(wsvar.hcp[1,,,][mask.hcp==1])
 	bsvar[50,50,51]
 	bsvar[50,50,50]
 	wsvar[1,50,50,51]
