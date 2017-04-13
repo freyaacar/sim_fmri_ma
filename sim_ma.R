@@ -78,8 +78,8 @@
 	}
 
   # check values
-	summary(bsvar[which(mask==1,arr.ind=TRUE)[1],which(mask==1,arr.ind=TRUE)[2],which(mask==1,arr.ind=TRUE)[3]])
-	summary(wsvar[1,which(mask==1,arr.ind=TRUE)[1],which(mask==1,arr.ind=TRUE)[2],which(mask==1,arr.ind=TRUE)[3]])
+	summary(bsvar[which(mask==1,arr.ind=TRUE)])
+	summary(wsvar[1,,,][c(which(mask==1,arr.ind=TRUE))])
 	bsvar[50,50,51]
 	bsvar[50,50,50]
 	wsvar[1,50,50,51]
