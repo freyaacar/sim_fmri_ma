@@ -121,6 +121,12 @@ fslpath <- '/usr/local/fsl/bin/'
 	wsvar[1,50,50,51]
 	wsvar[1,50,50,50]
 
+  # check over voxels
+	bdw.hcp <- bsvar.hcp/apply(wsvar.hcp,c(2,3,4),mean)
+	writeNIfTI(bdw.hcp, filename = paste("bdw.hcp",k,sep=''),gzipped=FALSE)
+	summary(bdw.hcp[mask.hcp==1])
+	levelplot(bdw.hcp[,,30])
+
 ################################################################################
 # Fixed and random effects meta-analysis
 ################################################################################

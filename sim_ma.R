@@ -85,8 +85,9 @@
 	wsvar[1,50,50,51]
 	wsvar[1,50,50,50]
 
-  # check per voxel
-	wdb <- apply(wsvar,c(2,3,4),mean)/bsvar
+  # check over voxels
+	bdw <- bsvar/apply(wsvar,c(2,3,4),mean)
+	writeNIfTI(bdw, filename = paste("bdw",sep=''),gzipped=FALSE)
 	summary(wdb[mask==1])
 	levelplot(wdb[,,30])
 
