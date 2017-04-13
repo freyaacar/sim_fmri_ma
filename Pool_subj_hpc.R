@@ -13,7 +13,7 @@ fslpath <- '/usr/local/fsl/bin/'
 
 	n.tot.hcp <- 188
 	k.hcp <- 12
-	n.perst.hpc <- c(9,9,12,12,12,12,14,16,16,20,25,31)
+	n.perst.hcp <- c(9,9,12,12,12,12,14,16,16,20,25,31)
 	ind.rand <- sample(c(1:188))
 
 ################################################################################
@@ -50,28 +50,31 @@ fslpath <- '/usr/local/fsl/bin/'
 ################################################################################
 # Compute group level t-maps
 ################################################################################
+	setwd(paste(home,"/HCP/",sep=""))
 	for (k in 1:k.hcp) {
 		fsl_model_cmd = paste(fslpath,"randomise -i cope",k," -o output",k," -1 --glm_output",sep="")
 		system(fsl_model_cmd)
 	}
 
+	setwd(home)
+	tmaps.hcp<-array(data=NA,dim=c(k.hcp,DIM))
+	for (k in 1:k.hcp) {
+    	tmaps.hcp[k,,,]<-readNIfTI(paste("HCP/output",k,"_tstat1",sep=""), verbose = FALSE, warn = -1, reorient = TRUE, call = NULL)
+    }	
 
 ################################################################################
 # Read in t and compute ES
-################################################################################
-	# t = cope/sqrt(varcope)
-
-  
+################################################################################  
   	# ES-maps
-	    J <- 1-(3/((4*(df.stud))-1))
+	    J <- 1-(3/((4*(n.perst.hcp-1))-1))
 	    ESmaps.hcp <- array(data=NA,dim=c(k.hcp,DIM))
-	    for (n in 1:n.tot.hcp) {
-	    	ESmaps.hcp[n,,,] <- tmaps.hcp[,,,n]/sqrt(n.perstud[n])*J[n]
+	    for (k in 1:k.hcp) {
+	    	ESmaps.hcp[k,,,] <- tmaps.hcp[k,,,]/sqrt(n.perst.hpc[k])*J[k]
 	    }
 	
   # Construct a mask for every study
     masks <- ifelse(tmaps == 0, 0, 1)
-    mask <- ifelse(apply(masks,c(2,3,4),mean) == 1, 1, 0)
+    mask.t.hcp <- ifelse(apply(masks,c(2,3,4),mean) == 1, 1, 0)
 
 
 ################################################################################
