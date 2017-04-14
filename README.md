@@ -9,10 +9,10 @@ We use a meta-analysis on pain which can be downloaded from neurovault (http://n
 * Read in t-maps  
 * Compute effect sizes  
 * Calculate within- and between study variance  
-
-## To do
 * Pool HCP studies
 * Compute within- and between study variance of HCP meta-analysis
+
+## To do
 * Determine other parameters from both meta-analyses (number of peaks, clusters, peak heights, cluster sizes, sample size, ...)  
 * Compare these parameters to the parameters of a meta-analysis constructed from HCP dataset
 * Find new datasets (+ extract as many parameters as possible)
